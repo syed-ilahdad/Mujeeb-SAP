@@ -1,96 +1,141 @@
-import { useState, useEffect, useRef } from "react";
+"USE CLIENT"
 
+import { useEffect, useRef, useState } from "react";
 
-
-/* ── Reveal wrapper ── */
-function Reveal({ children, delay = 0, direction = "up", className = "" }) {
-  const [ref, visible] = useReveal(0.12);
-  const transforms = { up: "translateY(36px)", down: "translateY(-36px)", left: "translateX(-36px)", right: "translateX(36px)" };
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "none" : transforms[direction],
-        transition: `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s`,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-
-/* ── Scroll-reveal hook ── */
-function useReveal(threshold = 0.15) {
+function useReveal() {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
   useEffect(() => {
-    const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
-      { threshold }
-    );
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, [threshold]);
+    const el = ref.current;
+    if (!el) return;
+    if (!window.IntersectionObserver) { setVisible(true); return; }
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { setVisible(true); obs.unobserve(el); }
+    }, { threshold: 0.08, rootMargin: "0px 0px -40px 0px" });
+    obs.observe(el);
+    return () => obs.unobserve(el);
+  }, []);
   return [ref, visible];
 }
 
-/* ══════════════════════════════════════
-   SHARED STYLES
-══════════════════════════════════════ */
-const secTag = { fontFamily: "Raleway,sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: 3, textTransform: "uppercase", color: "#0f4c8f", marginBottom: 10, display: "block" };
-const secH2 = { fontFamily: "Raleway,sans-serif", fontSize: "clamp(1.5rem,2.5vw,2rem)", fontWeight: 800, color: "#0f1c36", marginBottom: 10 };
-const bodyText = { fontSize: "14.5px", color: "#4b5563", lineHeight: 1.8, marginBottom: 14 };
-
-
-
-
-/* ══════════════════════════════════════
-   INDUSTRIES
-══════════════════════════════════════ */
-const industriesData = [
-  { name: "Retail", emoji: "🛍️", desc: "Building futuristic solutions for the retail industry", color: "#1565c0" },
-  { name: "Fashion", emoji: "👗", desc: "Speed-to-market solutions for global fashion brands", color: "#880e4f" },
-  { name: "Consumer Products", emoji: "📦", desc: "Building futuristic solutions for the consumer products industry", color: "#e65100" },
-  { name: "Manufacturing, Logistics, Energy & Utilities", emoji: "🏭", desc: "Transforming industries with the power of innovation", color: "#2e7d32" },
-  { name: "Technology, Media & Telecommunication", emoji: "📡", desc: "Innovate with domain expertise and a fit-to-standard approach", color: "#6a1c9a" },
-  { name: "Healthcare, Public Sector & Defense", emoji: "🏥", desc: "Comprehensive solutions for better insights, outcomes, and value", color: "#0277bd" },
-];
-
-function Industries() {
+function Reveal({ children, delay = 0, direction = "up", style: s = {} }) {
+  const [ref, visible] = useReveal();
+  const o = { up:"translateY(30px)", left:"translateX(-30px)", right:"translateX(30px)" };
   return (
-    <section id="industries" style={{ padding: "72px 0", background: "#fff" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px" }}>
-        <Reveal>
-          <div style={{ textAlign: "center", marginBottom: 52 }}>
-            <span style={secTag}>Industries</span>
-            <h2 style={{ ...secH2, textAlign: "center" }}>Providing Concrete Value Across Industries</h2>
-            <p style={{ fontSize: "1rem", color: "#0f4c8f", fontWeight: 600 }}>Innovation, Speed, and Excellence customized to address unique domain-specific challenges</p>
-          </div>
-        </Reveal>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 24 }} className="ind-grid">
-          {industriesData.map((ind, i) => (
-            <Reveal key={ind.name} delay={i * 0.07} direction="up">
-              <div style={{ border: "1px solid #e2e6ed", overflow: "hidden", transition: "box-shadow 0.2s, transform 0.2s" }}
-                onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 8px 28px rgba(0,0,0,0.10)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
-                onMouseLeave={e => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}
-              >
-                <div style={{ height: 160, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "3rem", background: ind.color + "14", borderBottom: `3px solid ${ind.color}` }}>{ind.emoji}</div>
-                <div style={{ padding: "18px 20px" }}>
-                  <div style={{ fontFamily: "Raleway,sans-serif", fontWeight: 700, fontSize: "0.92rem", color: "#0f1c36", marginBottom: 6 }}>{ind.name}</div>
-                  <div style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.6 }}>{ind.desc}</div>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
+    <div ref={ref} style={{
+      opacity:visible?1:0, transform:visible?"none":o[direction],
+      transition:`opacity 0.7s cubic-bezier(.4,0,.2,1) ${delay}s, transform 0.7s cubic-bezier(.4,0,.2,1) ${delay}s`,
+      willChange:"opacity, transform", height:"100%", ...s,
+    }}>{children}</div>
   );
 }
 
+const industries = [
+  { name:"Retail", emoji:"🛍️", accent:"#0f4c8f", accentLight:"#eff6ff", accentBorder:"#bfdbfe",
+    desc:"Futuristic retail solutions powered by AI-driven insights, omnichannel integration, and real-time inventory analytics." },
+  { name:"Fashion", emoji:"👗", accent:"#7c3aed", accentLight:"#f5f3ff", accentBorder:"#ddd6fe",
+    desc:"Speed-to-market solutions for global fashion brands with integrated supply chain and trend-responsive demand planning." },
+  { name:"Consumer Products", emoji:"📦", accent:"#0369a1", accentLight:"#f0f9ff", accentBorder:"#bae6fd",
+    desc:"End-to-end digital transformation for consumer products companies navigating rapidly shifting market demands." },
+  { name:"Manufacturing & Logistics", emoji:"🏭", accent:"#166534", accentLight:"#f0fdf4", accentBorder:"#bbf7d0",
+    desc:"Smart factory to connected logistics — transforming operations through innovation, automation, and data visibility." },
+  { name:"Technology, Media & Telecom", emoji:"📡", accent:"#b45309", accentLight:"#fffbeb", accentBorder:"#fde68a",
+    desc:"Domain expertise and fit-to-standard approaches enabling tech-driven organizations to innovate at scale." },
+  { name:"Healthcare, Public Sector & Defense", emoji:"🏥", accent:"#0f766e", accentLight:"#f0fdfa", accentBorder:"#99f6e4",
+    desc:"Comprehensive solutions delivering better insights, regulatory compliance, and operational value in critical sectors." },
+];
 
-export default Industries
+export default function Industries() {
+  return (
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+        .ind-grid {
+          display:grid; grid-template-columns:repeat(3,1fr); gap:24px;
+          max-width:1100px; margin:0 auto;
+        }
+        .ind-card {
+          border-radius:18px; overflow:hidden; background:#fff;
+          border:1px solid #e2e8f0;
+          transition:transform 0.3s ease, box-shadow 0.3s ease;
+          display:flex; flex-direction:column;
+          height:100%;
+        }
+        .ind-card:hover { transform:translateY(-8px); box-shadow:0 24px 56px rgba(0,0,0,0.10); }
+
+        .ind-learn {
+          display:inline-flex; align-items:center; gap:5px;
+          font-family:'Plus Jakarta Sans',sans-serif; font-size:12.5px;
+          font-weight:700; text-decoration:none;
+          transition:gap 0.2s ease;
+        }
+        .ind-learn:hover { gap:9px !important; }
+
+        @media(max-width:900px) { .ind-grid{grid-template-columns:repeat(2,1fr) !important;} }
+        @media(max-width:540px) { .ind-grid{grid-template-columns:1fr !important;} }
+      `}</style>
+
+      <section id="industries" style={{ padding:"100px 0", background:"#fff", position:"relative", overflow:"hidden" }}>
+
+        <div aria-hidden style={{ position:"absolute",inset:0,backgroundImage:"radial-gradient(circle,#e2e8f0 1px,transparent 1px)",backgroundSize:"30px 30px",opacity:0.3,pointerEvents:"none" }} />
+
+        <div style={{ maxWidth:1280, margin:"0 auto", padding:"0 24px", position:"relative" }}>
+
+          {/* Header */}
+          <Reveal style={{ height:"auto" }}>
+            <div style={{ textAlign:"center", marginBottom:64 }}>
+              <div style={{ display:"inline-flex",alignItems:"center",gap:10,marginBottom:18 }}>
+                <div style={{ width:28,height:2.5,background:"#0f4c8f",borderRadius:2 }} />
+                <span style={{ fontFamily:"'Plus Jakarta Sans',sans-serif",fontSize:11,fontWeight:800,letterSpacing:"3px",textTransform:"uppercase",color:"#0f4c8f" }}>Industries</span>
+                <div style={{ width:28,height:2.5,background:"#0f4c8f",borderRadius:2 }} />
+              </div>
+              <h2 style={{ fontFamily:"'Playfair Display',serif",fontSize:"clamp(2rem,3.5vw,3rem)",fontWeight:800,color:"#050f24",lineHeight:1.15,marginBottom:16 }}>
+                Providing Concrete Value{" "}
+                <em style={{ color:"#1d4ed8",fontStyle:"italic" }}>Across Industries</em>
+              </h2>
+              <p style={{ fontFamily:"'Plus Jakarta Sans',sans-serif",fontSize:16,color:"#64748b",maxWidth:520,margin:"0 auto",lineHeight:1.8 }}>
+                Innovation, speed, and expertise — tailored for every domain we serve across the globe.
+              </p>
+            </div>
+          </Reveal>
+
+          {/* Cards grid */}
+          <div className="ind-grid">
+            {industries.map((ind, i) => (
+              <div key={ind.name} style={{ display:"flex" }}>
+                <Reveal delay={i * 0.06}>
+                  <div className="ind-card">
+                    {/* Banner */}
+                    <div style={{
+                      height:152, display:"flex", alignItems:"center", justifyContent:"center",
+                      fontSize:"3rem", background:ind.accentLight,
+                      position:"relative", flexShrink:0, overflow:"hidden",
+                    }}>
+                      {ind.emoji}
+                      <div aria-hidden style={{ position:"absolute",bottom:0,left:0,right:0,height:3,background:ind.accent,opacity:0.55 }} />
+                    </div>
+
+                    {/* Body */}
+                    <div style={{ padding:"22px 24px 26px", display:"flex", flexDirection:"column", flexGrow:1 }}>
+                      <div style={{ fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:800,fontSize:15.5,color:"#050f24",marginBottom:10,lineHeight:1.3 }}>
+                        {ind.name}
+                      </div>
+                      <p style={{ fontFamily:"'Plus Jakarta Sans',sans-serif",fontSize:14,color:"#64748b",lineHeight:1.75,flexGrow:1,marginBottom:18 }}>
+                        {ind.desc}
+                      </p>
+                      <a href="#" className="ind-learn" style={{ color:ind.accent }}>
+                        Learn More
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                      </a>
+                    </div>
+                  </div>
+                </Reveal>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}

@@ -1,13 +1,17 @@
 'use client';
 import { useState, useEffect, useRef } from "react";
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import About from "./components/About";
-import Services from "./components/Services";
-import Industries from "./components/Industries";
-import Insights from "./components/Insights";
-import Footer from "./components/Footer";
-import Link from "next/link";
+
+
+import Navbar from "./Navbar";
+import Hero from "./Hero";
+import About from "./About";
+import Services from "./Services";
+import Industries from "./Industries";
+import Insights from "./Insights";
+import Footer from "./Footer";
+
+
+
 
 /* ══════════════════════════════════════
    ROOT APP + GLOBAL CSS
@@ -42,21 +46,24 @@ const globalCSS = `
   }
 `;
 
-export default function App() {
+
+
+function Home() {
   return (
-    <>
-      <style>{globalCSS}</style>
+    <> 
+    <style>{globalCSS}</style>
 
       <Navbar />
       <Hero />
       <About />
-      <Services />
+      <Services /> 
       <Industries />
       <Insights />
       <Footer />
-      <Link href="/aboutus">
-        <button>Go to About</button>
-      </Link>
-    </>
-  );
+
+      
+      </>
+  )
 }
+
+export default Home
