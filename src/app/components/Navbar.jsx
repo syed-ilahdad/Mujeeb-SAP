@@ -1,44 +1,131 @@
-"USE CLIENT"
+"use client";
 
 import { useState, useEffect, useRef } from "react";
-import { href } from "react-router-dom";
 
 /* ── Design tokens ── */
 const T = {
-  navy: "#050f24", blue: "#0f4c8f", indigo: "#1d4ed8",
-  sky: "#3b82f6", skyLight: "#93c5fd", slate900: "#0a1628",
-  slate500: "#64748b", slate200: "#e2e8f0", white: "#ffffff",
+  navy: "#050f24",
+  blue: "#0f4c8f",
+  indigo: "#1d4ed8",
+  sky: "#3b82f6",
+  skyLight: "#93c5fd",
+  slate900: "#0a1628",
+  slate500: "#64748b",
+  slate200: "#e2e8f0",
+  white: "#ffffff",
 };
 
 const menuData = [
   { label: "Home", href: "/" },
+
   {
     label: "Services",
     groups: [
-      { title: "S/4HANA Services", items: ["S/4HANA Advisory", "S/4 Migration", "Rise with SAP"] },
-      { title: "SAP BTP", items: ["App Development", "Automation", "Integration", "AI & ML"] },
-      { title: "Data & Analytics", items: ["Strategy & Advisory", "Analytics & Planning", "Data Management", "Cloud Warehousing"] },
-      { title: "Business Advisory", items: ["Process Intelligence", "Value Assurance", "People & Org", "Process Automation"] },
-      { title: "Finance", items: ["FP&A", "Finance Analytics", "Central Finance"] },
-      { title: "Cloud", items: ["Cloud Advisory", "Data Transition", "Cloud Security"] },
+      {
+        title: "S/4HANA Services",
+        items: ["S/4HANA Advisory", "S/4 Migration", "Rise with SAP"],
+      },
+      {
+        title: "SAP BTP",
+        items: ["App Development", "Automation", "Integration", "AI & ML"],
+      },
+      {
+        title: "Data & Analytics",
+        items: [
+          "Strategy & Advisory",
+          "Analytics & Planning",
+          "Data Management",
+          "Cloud Warehousing",
+        ],
+      },
+      {
+        title: "Business Advisory",
+        items: [
+          "Process Intelligence",
+          "Value Assurance",
+          "People & Org",
+          "Process Automation",
+        ],
+      },
+      {
+        title: "Finance",
+        items: ["FP&A", "Finance Analytics", "Central Finance"],
+      },
+      {
+        title: "Cloud",
+        items: ["Cloud Advisory", "Data Transition", "Cloud Security"],
+      },
       { title: "App Management Services", items: [] },
       { title: "Quality Engineering", items: [] },
-    ],href:"/services"
+    ],
+    href: "/services",
   },
+
   {
     label: "Solutions",
     groups: [
-      { title: "S/4HANA", items: ["Config Migration", "Code Modernization", "Data Transition Platform"] },
-      { title: "Digital Toolkit", items: ["RunWay Approach", "RunningStart Methodology"] },
-      { title: "Data Tools", items: ["Data Quality Toolkit", "Governance Blueprint", "Migration Accelerator"] },
-      { title: "Finance", items: ["Finance Performance Mgmt", "AP Automation", "S/4 Finance Starter"] },
-    ],href:"solutions"
+      {
+        title: "S/4HANA",
+        items: [
+          "Config Migration",
+          "Code Modernization",
+          "Data Transition Platform",
+        ],
+      },
+      {
+        title: "Digital Toolkit",
+        items: ["RunWay Approach", "RunningStart Methodology"],
+      },
+      {
+        title: "Data Tools",
+        items: [
+          "Data Quality Toolkit",
+          "Governance Blueprint",
+          "Migration Accelerator",
+        ],
+      },
+      {
+        title: "Finance",
+        items: [
+          "Finance Performance Mgmt",
+          "AP Automation",
+          "S/4 Finance Starter",
+        ],
+      },
+    ],
+    href: "/solutions",
   },
+
   {
     label: "Industries",
-    groups: [{ title: "", items: ["Consumer Products", "Manufacturing & Logistics", "Energy & Utilities", "Technology & Media", "Telecommunication", "Healthcare", "Public Sector & Defense"] }],href:"/industries"
+    groups: [
+      {
+        title: "",
+        items: [
+          "Consumer Products",
+          "Manufacturing & Logistics",
+          "Energy & Utilities",
+          "Technology & Media",
+          "Telecommunication",
+          "Healthcare",
+          "Public Sector & Defense",
+        ],
+      },
+    ],
+    href: "/industries",
   },
-  { label: "Insights", groups: [{ title: "", items: ["Blogs & Articles", "Career Opportunities", "Success Stories"] }],href:"insights" },
+
+  {
+    label: "Insights",
+    groups: [
+      {
+        title: "",
+        items: ["Blogs & Articles", "Career Opportunities", "Success Stories"],
+      },
+    ],
+    href: "/insights",
+  },
+
   { label: "About", href: "/about" },
 ];
 
@@ -58,11 +145,19 @@ export default function Navbar() {
   useEffect(() => {
     if (mobileOpen) document.body.style.overflow = "hidden";
     else document.body.style.overflow = "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [mobileOpen]);
 
-  const onEnter = (label) => { clearTimeout(closeTimer.current); setOpenMenu(label); };
-  const onLeave = () => { closeTimer.current = setTimeout(() => setOpenMenu(null), 150); };
+  const onEnter = (label) => {
+    clearTimeout(closeTimer.current);
+    setOpenMenu(label);
+  };
+
+  const onLeave = () => {
+    closeTimer.current = setTimeout(() => setOpenMenu(null), 150);
+  };
 
   return (
     <>
@@ -226,7 +321,6 @@ export default function Navbar() {
           {/* ── LOGO ── */}
           <a href="/" className="mroc-logo">
             <div className="logo-mark">
-              {/* Abstract "M" cloud icon */}
               <svg width="26" height="22" viewBox="0 0 26 22" fill="none">
                 <path d="M2 16 Q2 8 8 8 Q9 4 13 4 Q17 4 18 8 Q22 8 24 12 Q24 18 18 18 L8 18 Q2 18 2 16Z" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="1.2"/>
                 <path d="M4 20 L8 12 L12 17 L16 10 L20 16 L22 14" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
@@ -242,40 +336,96 @@ export default function Navbar() {
           {/* ── DESKTOP NAV ── */}
           <ul className="desktop-nav">
             {menuData.map((item) => (
-              <li key={item.label} className="nav-item"
+              <li
+                key={item.label}
+                className="nav-item"
                 onMouseEnter={() => item.groups && onEnter(item.label)}
                 onMouseLeave={() => item.groups && onLeave()}
               >
-                {item.href
-                  ? <a href={item.href} className="nav-btn">{item.label}</a>
-                  : <button className="nav-btn">
-                      {item.label}
-                      {item.groups && <span className="nav-chevron">▾</span>}
-                    </button>
-                }
+                {item.href ? (
+                  <a href={item.href} className="nav-btn">
+                    {item.label}
+                    {item.groups && <span className="nav-chevron">▾</span>}
+                  </a>
+                ) : (
+                  <button className="nav-btn">
+                    {item.label}
+                    {item.groups && <span className="nav-chevron">▾</span>}
+                  </button>
+                )}
+
                 {item.groups && openMenu === item.label && (
-                  <div className="dd-panel" style={{ gridTemplateColumns: `repeat(${Math.min(item.groups.filter(g=>g.items.length>0||g.title).length, 3)},1fr)` }}
+                  <div
+                    className="dd-panel"
+                    style={{
+                      gridTemplateColumns: `repeat(${Math.min(
+                        item.groups.filter(
+                          (g) => g.items.length > 0 || g.title
+                        ).length,
+                        3
+                      )},1fr)`,
+                    }}
                     onMouseEnter={() => clearTimeout(closeTimer.current)}
                     onMouseLeave={onLeave}
                   >
                     {item.groups.map((g, i) => (
                       <div key={i}>
-                        {g.title && <div className="dd-group-title">{g.title}</div>}
-                        {g.items.map(s => <a key={s} href="#services" className="dd-link">{s}</a>)}
+                        {g.title && (
+                          <div className="dd-group-title">{g.title}</div>
+                        )}
+
+                        {/* ONLY FUNCTIONALITY CHANGED */}
+                        {g.items.map((s) => (
+                          <a
+                            key={s}
+                            href={item.href}
+                            className="dd-link"
+                          >
+                            {s}
+                          </a>
+                        ))}
                       </div>
                     ))}
                   </div>
                 )}
               </li>
             ))}
-            <li><a href="#contact" className="nav-cta">Contact Us</a></li>
+
+            <li>
+              <a href="/contact" className="nav-cta">
+                Contact Us
+              </a>
+            </li>
           </ul>
 
           {/* ── HAMBURGER ── */}
-          <button className="hamburger" onClick={() => setMobileOpen(o => !o)} aria-label="Toggle menu">
-            <span className="hbar" style={{ transform: mobileOpen ? "rotate(45deg) translate(5px,6.5px)" : "none" }} />
-            <span className="hbar" style={{ opacity: mobileOpen ? 0 : 1, transform: mobileOpen ? "scaleX(0)" : "none" }} />
-            <span className="hbar" style={{ transform: mobileOpen ? "rotate(-45deg) translate(5px,-6.5px)" : "none" }} />
+          <button  className="hamburger"
+            onClick={() => setMobileOpen((o) => !o)}
+            aria-label="Toggle menu"
+          >
+            <span
+              className="hbar"
+              style={{
+                transform: mobileOpen
+                  ? "rotate(45deg) translate(5px,6.5px)"
+                  : "none",
+              }}
+            />
+            <span
+              className="hbar"
+              style={{
+                opacity: mobileOpen ? 0 : 1,
+                transform: mobileOpen ? "scaleX(0)" : "none",
+              }}
+            />
+            <span
+              className="hbar"
+              style={{
+                transform: mobileOpen
+                  ? "rotate(-45deg) translate(5px,-6.5px)"
+                  : "none",
+              }}
+            />
           </button>
         </div>
       </nav>
@@ -285,32 +435,104 @@ export default function Navbar() {
         <div className="mobile-overlay">
           {menuData.map((item, idx) => (
             <div key={item.label}>
-              {item.href
-                ? <a href={item.href} className="mob-link" style={{ animationDelay: `${idx * 0.04}s` }} onClick={() => setMobileOpen(false)}>{item.label}</a>
-                : <>
-                    <button className="mob-link" style={{ animationDelay: `${idx * 0.04}s` }}
-                      onClick={() => setMobileExp(mobileExp === item.label ? null : item.label)}
+              {item.href ? (
+                <a
+                  href={item.href}
+                  className="mob-link"
+                  style={{ animationDelay: `${idx * 0.04}s` }}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <>
+                  <button
+                    className="mob-link"
+                    style={{ animationDelay: `${idx * 0.04}s` }}
+                    onClick={() =>
+                      setMobileExp(
+                        mobileExp === item.label ? null : item.label
+                      )
+                    }
+                  >
+                    {item.label}
+                    <span
+                      style={{
+                        fontSize: 16,
+                        fontWeight: 300,
+                        transition: "transform 0.2s",
+                        transform:
+                          mobileExp === item.label
+                            ? "rotate(45deg)"
+                            : "none",
+                        display: "inline-block",
+                      }}
                     >
-                      {item.label}
-                      <span style={{ fontSize: 16, fontWeight: 300, transition: "transform 0.2s", transform: mobileExp === item.label ? "rotate(45deg)" : "none", display: "inline-block" }}>+</span>
-                    </button>
-                    {mobileExp === item.label && (
-                      <div style={{ background: "#f8faff", padding: "8px 24px 16px 32px", borderBottom: "1px solid #e2e8f0" }}>
-                        {item.groups?.map((g, gi) => (
-                          <div key={gi} style={{ marginTop: 12 }}>
-                            {g.title && <div style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: 10, fontWeight: 800, color: "#0f4c8f", textTransform: "uppercase", letterSpacing: "2px", marginBottom: 6 }}>{g.title}</div>}
-                            {g.items.map(s => <a key={s} href="#services" className="mob-sub-item" onClick={() => setMobileOpen(false)}>{s}</a>)}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </>
-              }
+                      +
+                    </span>
+                  </button>
+
+                  {mobileExp === item.label && (
+                    <div
+                      style={{
+                        background: "#f8faff",
+                        padding: "8px 24px 16px 32px",
+                        borderBottom: "1px solid #e2e8f0",
+                      }}
+                    >
+                      {item.groups?.map((g, gi) => (
+                        <div key={gi} style={{ marginTop: 12 }}>
+                          {g.title && (
+                            <div
+                              style={{
+                                fontFamily:
+                                  "'Plus Jakarta Sans',sans-serif",
+                                fontSize: 10,
+                                fontWeight: 800,
+                                color: "#0f4c8f",
+                                textTransform: "uppercase",
+                                letterSpacing: "2px",
+                                marginBottom: 6,
+                              }}
+                            >
+                              {g.title}
+                            </div>
+                          )}
+
+                          {/* ONLY FUNCTIONALITY CHANGED */}
+                          {g.items.map((s) => (
+                            <a
+                              key={s}
+                              href={item.href}
+                              className="mob-sub-item"
+                              onClick={() => setMobileOpen(false)}
+                            >
+                              {s}
+                            </a>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           ))}
+
           <div style={{ padding: "24px" }}>
-            <a href="#contact" className="nav-cta" style={{ display: "block", textAlign: "center", marginLeft: 0, padding: "15px" }}
-              onClick={() => setMobileOpen(false)}>Contact Us →</a>
+            <a
+              href="#contact"
+              className="nav-cta"
+              style={{
+                display: "block",
+                textAlign: "center",
+                marginLeft: 0,
+                padding: "15px",
+              }}
+              onClick={() => setMobileOpen(false)}
+            >
+              Contact Us →
+            </a>
           </div>
         </div>
       )}
